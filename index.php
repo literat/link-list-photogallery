@@ -62,7 +62,7 @@ define('JS_DIR',	HTTP_DIR.'remote/jslib/');
 require_once(ROOT_DIR . 'config.php');
 
 function savePhotogallery($connection) {
-	$sql = 'INSERT INTO photogalleries (year, link, name, author, email, publication) VALUES (:year, :link, :name, :author, :email, :publication)';
+	$sql = 'INSERT INTO photogalleries (year, link, name, author, email, num, publication) VALUES (:year, :link, :name, :author, :email, :num, :publication)';
 
 	$values = array(
 		':year' 		=> $_POST['year'],
@@ -70,7 +70,8 @@ function savePhotogallery($connection) {
 		':name' 		=> $_POST['name'],
 		':author' 		=> $_POST['author'],
 		':email' 		=> $_POST['email'],
-		':publication' 	=> $_POST['publication']
+		':num'			=> $_POST['num'],
+		':publication' 	=> '1'
 	);
 
 	$query = $connection->prepare($sql);
@@ -140,6 +141,11 @@ include_once('vodni_header.inc.php');
 			<script src='<?php echo JS_DIR; ?>validation/messages_cs.js' type='text/javascript'></script>
 			<script src='<?php echo JS_DIR; ?>validation/methods_de.js' type='text/javascript'></script> 
 			<script type="text/javascript">
+				$.validator.addMethod("num", function(value, element) {
+					if(value.match(/^[1-9]{1}[0-9a-zA-Z]{2}\.[0-9a-zA-Z]{1}[0-9a-zA-Z]{1}$/)) return true;
+					else if(value.match(/^$/)) return true;
+					else return false;
+				}, "Hodnota musí být ve formátu nnn.nn!");
 				$(document).ready(function(){
 					$("#form").validate({
 						submitHandler: function(form) {
@@ -168,7 +174,11 @@ include_once('vodni_header.inc.php');
 							email: {
 								required: true,
 								email: true,
-							}
+							},
+							num: {
+								num: true,
+								maxlength: 6,
+							},
 						},
 						messages: {
 							year: 	"Rok musí být vyplněn (rrrr)!",
@@ -190,12 +200,7 @@ include_once('vodni_header.inc.php');
 					<label>Název galerie: <input type="text" name="name" value="" /></label>
 					<label>Autor: <input type="text" name="author" value="" /></label>
 					<label>E-mail: <input type="text" name="email" value="@" /></label>
-					<label>Souhlas ke zveřejnění:
-						<select name="publication">
-							<option value="0">Ne</option>
-							<option value="1">Ano</option>
-						</select>
-					</label>
+					<label>Číslo přístavu: <input type="text" name="num" value="" /></label>
 					<input type="submit" name="button" value="Uložit">
 				</fieldset>
 				<input type="hidden" name="save" value="save" />
