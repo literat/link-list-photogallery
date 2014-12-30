@@ -125,7 +125,7 @@ if(isset($_POST['save']) && $_POST['save'] == 'save') {
 		$headers = 'From: fotogalerie@vodni.skauting.cz' . "\r\n" .
     				'Reply-To: hvezdar@skaut.cz' . "\r\n";
 
-		mail($_POST['email'].', tomaslitera@hotmail.com', $subject, $message, $headers);
+		mail($_POST['email'].', hvezdar@skaut.cz', $subject, $message, $headers);
 		$result_info = '<span class="success">Galerie byla úspěšně uložena!</span>';
 	} else {
 		$result_info = '<span class="fail">Galerii se nepodařilo uložit!</span>';
