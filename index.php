@@ -202,7 +202,7 @@ if(sessionUserAuth($db, 2) || sessionUserAuth($db, 20)) {
 	$sql = 'SELECT * FROM photogalleries WHERE publication = "1" ORDER BY year DESC';
 }
 $result = $db->query($sql);
-$rows = $result->fetchAll();
+$rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
 include_once('vodni_header.inc.php');
 ?>
