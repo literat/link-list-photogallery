@@ -31,9 +31,13 @@
 		.photogalleries label {font-weight: bold;padding: 10px 0px;}
 		.photogalleries input,
 		.photogalleries select {margin-right: 350px;float: right;}
-		.photogalleries .success {display:block;background-color:lime;border:2px solid green;}
-		.photogalleries .fail,
-		.photogalleries .error {display:block;background-color:orangered;border:2px solid red;}
+		.photogalleries input.error {padding:3px;border-radius:0px;}
+		.photogalleries .alert,
+		.photogalleries .error {padding:10px;border-radius:4px;display:inline-block;background-color:#F2DEDE;border:2px solid #EBCCD1;}
+		.photogalleries .alert strong {margin: 0px;}
+		.photogalleries .alert-danger {color:#A94442;background-color:#F2DEDE;border-color:#EBCCD1;}
+		.photogalleries .alert-success {color:#3C763D;background-color:#DFF0D8;border-color:#D6E9C6;}
+		.photogalleries label.error {display:inline-block;margin-left:123px;margin-top:5px;padding:5px;color:#A94442;}
 		#footer {
 			background: url('<?php echo HTTP_DIR; ?>plugins/templates/hkvs2/images/outer-bottom-program.png') no-repeat scroll left top transparent;
 		}
@@ -81,50 +85,51 @@
 
 		<h3 class="box-title">Menu</h3>
 		<ul class="menu">
-		<li class="menu-dropdown menu-item-z-kapitanskeho-mustku first"><a href="z-kapitanskeho-mustku" class="menu-dropdown-link">Z kapitánského můstku</a>
-		<ul class="menu-dropdown-list">
-		    <li class="menu-item-hkvs-hlasi first"><a href="hkvs-hlasi">HKVS hlásí</a></li>
-		    <li class="menu-item-slozeni-hkvs"><a href="slozeni-hkvs">Složení HKVS</a></li>
-		    <li class="menu-item-zapisy"><a href="zapisy">Zápisy</a></li>
-		    <li class="menu-item-spisovna"><a href="spisovna">Řády, vyhlášky, předpisy</a></li>
-		    <li class="menu-item-vodacke-desetikoruny last"><a href="vodacke-desetikoruny">Vodácké desetikoruny</a></li>
-		</ul>
-		</li>
-		<li class="menu-dropdown menu-item-metodika"><a href="metodika" class="menu-dropdown-link">Metodika</a>
-		<ul class="menu-dropdown-list">
-		    <li class="menu-item-metodicke-materialy first"><a href="metodicke-materialy">Metodické materiály</a></li>
-		    <li class="menu-item-zabicky-a-vlcata"><a href="zabicky-a-vlcata">Žabičky a vlčata</a></li>
-		    <li class="menu-item-skautky-a-skauti last"><a href="skautky-a-skauti">Skautky a skauti</a></li>
-		</ul>
-		</li>
-		<li class="menu-dropdown menu-item-vzdelavani"><a href="vzdelavani" class="menu-dropdown-link">Vzdělávání</a>
-		<ul class="menu-dropdown-list">
-		    <li class="menu-item-vodacke-kvalifikace first"><a href="vodacke-kvalifikace">Vodácké kvalifikace</a></li>
-		    <li class="menu-item-pro-poradatele-zkousek"><a href="pro-poradatele-zkousek">Pro pořadatele zkoušek</a></li>
-		    <li class="menu-item-lektori-a-instruktori-vs"><a href="lektori-a-instruktori-vs">Lektoři a instruktoři VS</a></li>
-		    <li class="menu-item-materialy-ke-studiu last"><a href="materialy-ke-studiu">Materiály ke studiu</a></li>
-		</ul>
-		</li>
-		<li class="menu-dropdown menu-item-akce"><a href="akce" class="menu-dropdown-link">Akce</a>
-		<ul class="menu-dropdown-list">
-		    <li class="menu-item-terminka first"><a href="terminka">Termínka</a></li>
-		    <li class="menu-item-sraz-vs-usk"><a href="sraz-vs-usk">Sraz VS - ÚSK</a></li>
-		    <li class="menu-item-pres-tri-jezy"><a href="pres-tri-jezy">Přes tři jezy</a></li>
-		    <li class="menu-item-skare"><a href="skare" target="_blank">SKARE</a></li>
-		    <li class="menu-item-navigamus"><a href="navigamus">Navigamus</a></li>
-		    <li class="menu-item-namorni-akademie-2"><a href="namorni-akademie-2">Námořní akademie</a></li>
-		    <li class="menu-item-lesni-skola-vodnich-skautu last"><a href="lesni-skola-vodnich-skautu">Vodácká lesní škola</a></li>
-		</ul>
-		</li>
-		<li class="menu-dropdown menu-item-casopisy"><a href="casopisy" class="menu-dropdown-link">Časopisy</a>
-		<ul class="menu-dropdown-list">
-		    <li class="menu-item-kapitanska-posta first"><a href="kapitanska-posta">Kapitánská pošta</a></li>
-		    <li class="menu-item-modkre-stranky"><a href="modkre-stranky">Mod/kré stránky</a></li>
-		    <li class="menu-item-euronaut last"><a href="euronaut">Euronaut</a></li>
-		</ul>
-		</li>
-		<li class="menu-item-lod-p550"><a href="lod-p550">Loď P550</a></li>
-		<li class="menu-item-kontakty last"><a href="kontakty">Kontakty</a></li>
+			<li class="menu-dropdown menu-item-z-kapitanskeho-mustku first">
+				<a href="z-kapitanskeho-mustku" class="menu-dropdown-link">Z kapitánského můstku</a>
+				<ul class="menu-dropdown-list">
+					<li class="menu-item-hkvs-hlasi first"><a href="hkvs-hlasi">HKVS hlásí</a></li>
+					<li class="menu-item-slozeni-hkvs"><a href="slozeni-hkvs">Složení HKVS</a></li>
+					<li class="menu-item-zapisy"><a href="zapisy">Zápisy</a></li>
+					<li class="menu-item-spisovna"><a href="spisovna">Řády, vyhlášky, předpisy</a></li>
+					<li class="menu-item-vodacke-desetikoruny last"><a href="vodacke-desetikoruny">Vodácké desetikoruny</a></li>
+				</ul>
+			</li>
+			<li class="menu-dropdown menu-item-metodika"><a href="metodika" class="menu-dropdown-link">Metodika</a>
+				<ul class="menu-dropdown-list">
+					<li class="menu-item-metodicke-materialy first"><a href="metodicke-materialy">Metodické materiály</a></li>
+					<li class="menu-item-zabicky-a-vlcata"><a href="zabicky-a-vlcata">Žabičky a vlčata</a></li>
+					<li class="menu-item-skautky-a-skauti last"><a href="skautky-a-skauti">Skautky a skauti</a></li>
+				</ul>
+			</li>
+			<li class="menu-dropdown menu-item-vzdelavani"><a href="vzdelavani" class="menu-dropdown-link">Vzdělávání</a>
+				<ul class="menu-dropdown-list">
+					<li class="menu-item-vodacke-kvalifikace first"><a href="vodacke-kvalifikace">Vodácké kvalifikace</a></li>
+					<li class="menu-item-pro-poradatele-zkousek"><a href="pro-poradatele-zkousek">Pro pořadatele zkoušek</a></li>
+					<li class="menu-item-lektori-a-instruktori-vs"><a href="lektori-a-instruktori-vs">Lektoři a instruktoři VS</a></li>
+					<li class="menu-item-materialy-ke-studiu last"><a href="materialy-ke-studiu">Materiály ke studiu</a></li>
+				</ul>
+			</li>
+			<li class="menu-dropdown menu-item-akce"><a href="akce" class="menu-dropdown-link">Akce</a>
+				<ul class="menu-dropdown-list">
+					<li class="menu-item-terminka first"><a href="terminka">Termínka</a></li>
+					<li class="menu-item-sraz-vs-usk"><a href="sraz-vs-usk">Sraz VS - ÚSK</a></li>
+					<li class="menu-item-pres-tri-jezy"><a href="pres-tri-jezy">Přes tři jezy</a></li>
+					<li class="menu-item-skare"><a href="skare" target="_blank">SKARE</a></li>
+					<li class="menu-item-navigamus"><a href="navigamus">Navigamus</a></li>
+					<li class="menu-item-namorni-akademie-2"><a href="namorni-akademie-2">Námořní akademie</a></li>
+					<li class="menu-item-lesni-skola-vodnich-skautu last"><a href="lesni-skola-vodnich-skautu">Vodácká lesní škola</a></li>
+				</ul>
+			</li>
+			<li class="menu-dropdown menu-item-casopisy"><a href="casopisy" class="menu-dropdown-link">Časopisy</a>
+				<ul class="menu-dropdown-list">
+					<li class="menu-item-kapitanska-posta first"><a href="kapitanska-posta">Kapitánská pošta</a></li>
+					<li class="menu-item-modkre-stranky"><a href="modkre-stranky">Mod/kré stránky</a></li>
+					<li class="menu-item-euronaut last"><a href="euronaut">Euronaut</a></li>
+				</ul>
+			</li>
+			<li class="menu-item-lod-p550"><a href="lod-p550">Loď P550</a></li>
+			<li class="menu-item-kontakty last"><a href="kontakty">Kontakty</a></li>
 		</ul>
 
 		<h3 class="box-title">Kapitánská pošta</h3>
@@ -134,32 +139,30 @@
 		  <input value="Odběr v PDF " type="submit">
 		</form><!------br />
 		 <form action="https://groups.google.com/a/hkvs.cz/group/odber-kp-epub/boxsubscribe">
-		    <input type=hidden name="hl" value="cs">
-		    EPUB: <input type=text size=15 name=email>
-		    <input type=submit name="sub" value="Odběr v EPUB">
+			<input type=hidden name="hl" value="cs">
+			EPUB: <input type=text size=15 name=email>
+			<input type=submit name="sub" value="Odběr v EPUB">
 		</form><br />
 		<form action="https://groups.google.com/a/hkvs.cz/group/odber-kp-mobi/boxsubscribe">
-		    <input type=hidden name="hl" value="cs">
-		    MOBI: <input type=text size=15 name=email>
-		    <input type=submit name="sub" value="Odběr v MOBI">
+			<input type=hidden name="hl" value="cs">
+			MOBI: <input type=text size=15 name=email>
+			<input type=submit name="sub" value="Odběr v MOBI">
 		</form------>
 
 		<h3 class="box-title">Uživatel</h3>
 		<ul>
 		  <li>
-		    <a class="usermenu-item-settings" href="/admin" title="administrace">administrace</a>
+			<a class="usermenu-item-settings" href="/admin" title="administrace">administrace</a>
 		  </li>
 		</ul>
 		<ul>
-		<li><a href="./index.php?m=login&amp;login_form_return=%2F" class="usermenu-item-login">přihlásit</a></li>
-		<li><a href="./index.php?m=reg" class="usermenu-item-reg">registrace</a></li>
-		<li><a href="./index.php?m=ulist" class="usermenu-item-ulist">uživatelé</a></li>
+			<li><a href="./index.php?m=login&amp;login_form_return=%2F" class="usermenu-item-login">přihlásit</a></li>
+			<li><a href="./index.php?m=reg" class="usermenu-item-reg">registrace</a></li>
+			<li><a href="./index.php?m=ulist" class="usermenu-item-ulist">uživatelé</a></li>
 		</ul>
 
 	</div>
 	<!--div id="column"-->
-    <!--/div-->
-    
- 	<hr class="hidden" />
+	<!--/div-->
 	
-    
+	<hr class="hidden" />

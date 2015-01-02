@@ -126,9 +126,9 @@ if(isset($_POST['save']) && $_POST['save'] == 'save') {
     				'Reply-To: hvezdar@skaut.cz' . "\r\n";
 
 		mail($_POST['email'].', hvezdar@skaut.cz', $subject, $message, $headers);
-		$result_info = '<span class="success">Galerie byla úspěšně uložena!</span>';
+		$result_info = '<span class="alert alert-success"><strong>OK!</strong> Galerie byla úspěšně uložena!</span>';
 	} else {
-		$result_info = '<span class="fail">Galerii se nepodařilo uložit!</span>';
+		$result_info = '<span class="alert alert-danger"><strong>Sakra!</strong> Galerii se nepodařilo uložit!</span>';
 	}
 }
 
@@ -143,6 +143,7 @@ include_once('vodni_header.inc.php');
 	<div id="content-pad">
 		<div class="photogalleries">
 			<h1>Fotogalerie</h1>
+			<?php echo $result_info; ?>
 			<p><a href="" onClick="$('#form').show();return false;">Přidat fotogalerii</a> (formulář pro přidání odkazu)</p>
 			<script src='<?php echo JS_DIR; ?>validation/messages_cs.js' type='text/javascript'></script>
 			<script src='<?php echo JS_DIR; ?>validation/methods_de.js' type='text/javascript'></script> 
@@ -199,7 +200,6 @@ include_once('vodni_header.inc.php');
 			<form id="form" method="post" action="index.php">
 				<fieldset>
 					<legend>Přidat fotogalerii</legend>
-					<?php echo $result_info; ?>
 					<div>Autoři souhlasící s využitím svých fotografií pro propagaci vodního skautingu mají za odkazem v závorce své jméno. Prosíme o jeho důsledné uvádění. .</div>
 					<label>Rok: <input type="text" name="year" value="<?php echo date('Y'); ?>" /></label>
 					<label>Odkaz na galerii: <input type="text" name="link" value="http://" /></label>
