@@ -212,6 +212,9 @@ include_once('vodni_header.inc.php');
 				<input type="hidden" name="save" value="save" />
 			</form>
 			<?php renderPhotogalleries(groupByYear($rows)); ?>
+			<div class="feedback">
+				Je nějaká galerie nefunkční? Chcete nahlásit chybu? Kontaktujte <a href="mailto:hvezdar@skaut.cz" title="E-mail na Hvězdáře">Hvězdáře</a>!
+			</div>
 		</div>
 	</div>
 </div>

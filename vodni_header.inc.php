@@ -38,6 +38,7 @@
 		.photogalleries .alert-danger {color:#A94442;background-color:#F2DEDE;border-color:#EBCCD1;}
 		.photogalleries .alert-success {color:#3C763D;background-color:#DFF0D8;border-color:#D6E9C6;}
 		.photogalleries label.error {display:inline-block;margin-left:123px;margin-top:5px;padding:5px;color:#A94442;}
+		.photogalleries .feedback {font-weight:bold;margin-top:20px;}
 		#footer {
 			background: url('<?php echo HTTP_DIR; ?>plugins/templates/hkvs2/images/outer-bottom-program.png') no-repeat scroll left top transparent;
 		}
