@@ -29,25 +29,6 @@ ALTER TABLE `photogalleries`
 MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
  */
 
-/* set devel environment */
-$ISDEV = ($_SERVER["SERVER_NAME"] == 'localhost' || $_SERVER["SERVER_NAME"] == 'vodni.skauting.local') ? true : false; 
-if($ISDEV) {
-	// devel
-	if($_SERVER["SERVER_NAME"] == 'vodni.skauting.local') {
-		define('ROOT_DIR',$_SERVER['DOCUMENT_ROOT'].'/');
-		define('HTTP_DIR','http://'.$_SERVER['HTTP_HOST'].'/');
-	} else {
-		define('ROOT_DIR',$_SERVER['DOCUMENT_ROOT'].'/skauting/vodni/');
-		define('HTTP_DIR','http://'.$_SERVER['HTTP_HOST'].'/skauting/vodni/');
-	}
-} 
-// production
-else {
-	// after ROOT_DIR must be slash "/"
-	define('ROOT_DIR', '/var/www/virtual/vodni/web/www/');
-	define('HTTP_DIR', 'http://'.$_SERVER['HTTP_HOST'].'/');
-}
-
 /**
  * This is directory definitions
  *
@@ -55,11 +36,15 @@ else {
  */
 
 /* System Directories */
+define('ROOT_DIR', __DIR__ . '/../');
+define('HTTP_DIR', 'http://'.$_SERVER['HTTP_HOST'].'/');
 define('IMG_DIR',	HTTP_DIR.'images/');
 define('CSS_DIR',	HTTP_DIR.'css/');
 define('JS_DIR',	HTTP_DIR.'remote/jslib/');
 
 require_once(ROOT_DIR . 'config.php');
+
+define('SESSION_PREFIX', md5($server.$database.$user.'sunlight')."-");
 
 function savePhotogallery($connection) {
 	$sql = 'INSERT INTO photogalleries (year, link, name, author, email, num, publication) VALUES (:year, :link, :name, :author, :email, :num, :publication)';
@@ -94,19 +79,72 @@ function groupByYear($rows) {
 	return $by_year;
 }
 
-function renderPhotogalleries($data) {
+function renderPhotogalleries($db, $data) {
 	$buffer = '';
 
 	foreach ($data as $key_year => $key_value) {
 		$buffer .= '<strong>'.htmlspecialchars($key_year)."</strong><br />\n";
 		foreach ($key_value as $row) {
-			$buffer .= '<a href="'.$row['link'].'" title="'.htmlspecialchars($row['name']).'" target="_blank">'.htmlspecialchars($row['name']).'</a>';
-			$buffer .= ' (autor '.htmlspecialchars($row['author']).')<br />';
+			$unpublished = '';
+			if($row['publication'] == 0) {$unpublished = 'class="unpublished"';}
+			$buffer .= '<a '.$unpublished.' href="'.$row['link'].'" title="'.htmlspecialchars($row['name']).'" target="_blank">'.htmlspecialchars($row['name']).'</a>';
+			$buffer .= ' (autor '.htmlspecialchars($row['author']).') ';
+			if(sessionUserAuth($db, 20) || sessionUserAuth($db, 2)) {
+				$buffer .= '<span class="handler">';
+				$buffer .= '<a href="?act=hide&id='.$row['id'].'">Schovat</a> ';
+				$buffer .= '<a href="?act=delete&id='.$row['id'].'">Smazat</a>';
+				$buffer .= '</span>';
+			}
+			$buffer .= '<br />';
 		}
 	}
 
 	echo $buffer;
 }
+
+function sessionUserAuth($db, $userId) {
+	// check session time and time of its inactivity
+	if(!isset($_SESSION[SESSION_PREFIX.'user']) || !isset($_SESSION[SESSION_PREFIX.'password'])) {
+		$_SESSION['user']["logged"] = false;
+		session_unset();
+	} else {
+		$_SESSION['user']["logged"] = true;
+	}
+
+	if(isset($_SESSION['user']['logged']) && ($_SESSION['user']['logged'] == true)) {
+		// do not trust the session from other system
+		// authentication of system data
+		$sql = "SELECT * FROM `sunlight-users` WHERE id = '".$_SESSION[SESSION_PREFIX.'user']."'";
+		$db_user = $db->prepare($sql);
+		$db_user->execute();
+		if($db_user->rowCount()) {
+			$user = $db_user->fetch(PDO::FETCH_ASSOC);
+			if($_SESSION[SESSION_PREFIX.'password'] != $user['password']) {
+				header("Location: ".HTTP_DIR."admin/");
+				die('Bad password!');
+			} else {
+				// regenerate time count
+				$_SESSION['user']['access_time'] = time();
+			}
+
+			if($_SESSION[SESSION_PREFIX.'user'] == $userId) {
+				return TRUE;
+			} else {
+				return FALSE;
+			}
+		}
+		$db_user->closeCursor();
+	} else {
+		session_unset();
+	}
+
+	return FALSE;
+}
+
+//nastartovani session
+session_name(SESSION_PREFIX.'session');
+//session_save_path(SESSION_DIR);
+session_start();
 
 $db_dns = 'mysql:host='.$server.';dbname='.$database;
 $db_options = array(
@@ -132,7 +170,37 @@ if(isset($_POST['save']) && $_POST['save'] == 'save') {
 	}
 }
 
-$sql = 'SELECT * FROM photogalleries WHERE publication = "1" ORDER BY year DESC';
+if(isset($_GET['act']) && intval($_GET['id']) && (sessionUserAuth($db, 20) || sessionUserAuth($db, 2))) {
+	$id = $_GET['id'];
+	switch ($_GET['act']) {
+		case 'hide':
+			$sql = 'UPDATE photogalleries SET publication = "0" WHERE id = "'.$id.'" LIMIT 1';
+			$result = $db->query($sql);
+			if($result) {
+				$result_info = '<span class="alert alert-success"><strong>OK!</strong> Galerie byla úspěšně schována!</span>';
+			} else {
+				$result_info = '<span class="alert alert-danger"><strong>Sakra!</strong> Galerii se nepodařilo schovat!</span>';
+			}
+			break;
+		case 'delete':
+			$sql = 'DELETE FROM photogalleries WHERE id = "'.$id.'" LIMIT 1';
+			$result = $db->query($sql);
+			if($result) {
+				$result_info = '<span class="alert alert-success"><strong>OK!</strong> Galerie byla úspěšně smazána!</span>';
+			} else {
+				$result_info = '<span class="alert alert-danger"><strong>Sakra!</strong> Galerii se nepodařilo smazat!</span>';
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+if(sessionUserAuth($db, 2) || sessionUserAuth($db, 20)) {
+	$sql = 'SELECT * FROM photogalleries ORDER BY year DESC';
+} else {
+	$sql = 'SELECT * FROM photogalleries WHERE publication = "1" ORDER BY year DESC';
+}
 $result = $db->query($sql);
 $rows = $result->fetchAll();
 
@@ -200,7 +268,7 @@ include_once('vodni_header.inc.php');
 			<form id="form" method="post" action="index.php">
 				<fieldset>
 					<legend>Přidat fotogalerii</legend>
-					<div>Autoři souhlasící s využitím svých fotografií pro propagaci vodního skautingu mají za odkazem v závorce své jméno. Prosíme o jeho důsledné uvádění. .</div>
+					<div>Autoři souhlasící s využitím svých fotografií pro propagaci vodního skautingu mají za odkazem v závorce své jméno. Prosíme o jeho důsledné uvádění.</div>
 					<label>Rok: <input type="text" name="year" value="<?php echo date('Y'); ?>" /></label>
 					<label>Odkaz na galerii: <input type="text" name="link" value="http://" /></label>
 					<label>Název galerie: <input type="text" name="name" value="" /></label>
@@ -211,7 +279,7 @@ include_once('vodni_header.inc.php');
 				</fieldset>
 				<input type="hidden" name="save" value="save" />
 			</form>
-			<?php renderPhotogalleries(groupByYear($rows)); ?>
+			<?php renderPhotogalleries($db, groupByYear($rows)); ?>
 			<div class="feedback">
 				Je nějaká galerie nefunkční? Chcete nahlásit chybu? Kontaktujte <a href="mailto:hvezdar@skaut.cz" title="E-mail na Hvězdáře">Hvězdáře</a>!
 			</div>
