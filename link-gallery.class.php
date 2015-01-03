@@ -48,13 +48,36 @@ class LinkGallery
 	private $mailFrom;
 	private $mailAdmin;
 	private $messages;
+	public static $instance;
+
+	/** Disable construct */
+	protected function __construct() {}
+
+	/** Disable cloning */
+	private function __clone() {}
 
 	/**
-	 * Construct
+	 * Get Singleton instance
+	 *
+	 * @param  void
+	 * @return LinkGallery  instance of LinkGallery
+	 */
+	public static function getInstance()
+	{
+		if (null == self::$instance) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+	/**
+	 * Initialization of values and connection
 	 *
 	 * @param  array  $options  array of options
+	 * @return void
 	 */
-	public function __construct(array $options)
+	public function init(array $options)
 	{
 		$pdoDNS = 'mysql:host='.$options['server'].';dbname='.$options['database'];
 		$pdoOptions = array(

@@ -54,7 +54,8 @@ $options = array(
 session_name(SESSION_PREFIX.'session');
 session_start();
 
-$LinkGallery = new LinkGallery($options);
+$LinkGallery = LinkGallery::getInstance();
+$LinkGallery->init($options);
 
 if(isset($_POST['save']) && $_POST['save'] == 'save') {
 	$values = array(
