@@ -264,7 +264,11 @@ class LinkGallery
 					$unpublished = 'class="unpublished"';
 				}
 				$buffer .= '<a '.$unpublished.' href="'.$row['link'].'" title="'.htmlspecialchars($row['name']).'" target="_blank">'.htmlspecialchars($row['name']).'</a>';
-				$buffer .= ' (autor <a href="mailto:'.htmlspecialchars($row['email']).'" title="'.htmlspecialchars($row['email']).'">'.htmlspecialchars($row['author']).'</a>) ';
+				if (call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
+					$buffer .= ' (autor <a href="mailto:'.htmlspecialchars($row['email']).'" title="'.htmlspecialchars($row['email']).'">'.htmlspecialchars($row['author']).'</a>) ';
+				} else {
+					$buffer .= ' (autor '.htmlspecialchars($row['author']).') ';
+				}
 				if (call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
 					$buffer .= '<span class="handler">';
 					if ($row['publication'] == 1) {
