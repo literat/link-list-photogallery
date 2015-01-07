@@ -35,7 +35,9 @@ $messages = array(
 	'danger-insert' 	=> 'Galerii se nepodařilo uložit!',
 	'success-hide'		=> 'Galerie byla úspěšně schována!',
 	'danger-hide' 		=> 'Galerii se nepodařilo schovat!',
-	'success-delete'		=> 'Galerie byla úspěšně smazána!',
+	'success-show'		=> 'Galerie byla úspěšně zobrazena!',
+	'danger-show' 		=> 'Galerii se nepodařilo zobrazit!',
+	'success-delete'	=> 'Galerie byla úspěšně smazána!',
 	'danger-delete' 	=> 'Galerii se nepodařilo smazat!',
 );
 
@@ -85,6 +87,10 @@ if(
 		case 'hide':
 			$result = $LinkGallery->hide($id);
 			$result_message = $LinkGallery->getMessage('hide', $result);
+			break;
+		case 'show':
+			$result = $LinkGallery->show($id);
+			$result_message = $LinkGallery->getMessage('show', $result);
 			break;
 		case 'delete':
 			$result = $LinkGallery->delete($id);

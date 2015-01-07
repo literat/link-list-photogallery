@@ -220,6 +220,19 @@ class LinkGallery
 	}
 
 	/**
+	 * Show gallery to visitors
+	 *
+	 * @param  int  $id  id of item
+	 * @return bool TRUE | FALSE
+	 */
+	public function show($id)
+	{
+		$sql = 'UPDATE photogalleries SET publication = "1" WHERE id = "'.$id.'" LIMIT 1';
+		$result = $this->connection->query($sql);
+		return $result;
+	}
+
+	/**
 	 * Delete gallery from database
 	 *
 	 * @param  int  $id  id of item
@@ -252,7 +265,11 @@ class LinkGallery
 				$buffer .= ' (autor '.htmlspecialchars($row['author']).') ';
 				if(call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
 					$buffer .= '<span class="handler">';
-					$buffer .= '<a href="?act=hide&id='.$row['id'].'">Schovat</a> ';
+					if($row['publication'] == 1) {
+						$buffer .= '<a href="?act=hide&id='.$row['id'].'">Schovat</a> ';
+					} else {
+						$buffer .= '<a href="?act=show&id='.$row['id'].'">Zobrazit</a> ';
+					}
 					$buffer .= '<a href="?act=delete&id='.$row['id'].'">Smazat</a>';
 					$buffer .= '</span>';
 				}
