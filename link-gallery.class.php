@@ -131,7 +131,7 @@ class LinkGallery
 	 */
 	private function getData()
 	{
-		if(call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
+		if (call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
 			$sql = 'SELECT * FROM photogalleries ORDER BY year DESC';
 		} else {
 			$sql = 'SELECT * FROM photogalleries WHERE publication = "1" ORDER BY year DESC';
@@ -198,7 +198,7 @@ class LinkGallery
 		$query = $this->connection->prepare($sql);
 		$result = $query->execute($queryValues);
 
-		if($result) {
+		if ($result) {
 			$result = $this->inform($values);
 			return TRUE;
 		} else {
@@ -260,12 +260,14 @@ class LinkGallery
 			$buffer .= '<strong>'.htmlspecialchars($key_year)."</strong><br />\n";
 			foreach ($key_value as $row) {
 				$unpublished = '';
-				if($row['publication'] == 0) {$unpublished = 'class="unpublished"';}
+				if ($row['publication'] == 0) {
+					$unpublished = 'class="unpublished"';
+				}
 				$buffer .= '<a '.$unpublished.' href="'.$row['link'].'" title="'.htmlspecialchars($row['name']).'" target="_blank">'.htmlspecialchars($row['name']).'</a>';
-				$buffer .= ' (autor '.htmlspecialchars($row['author']).') ';
-				if(call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
+				$buffer .= ' (autor <a href="mailto:'.htmlspecialchars($row['email']).'" title="'.htmlspecialchars($row['email']).'">'.htmlspecialchars($row['author']).'</a>) ';
+				if (call_user_func($this->authFunc, $this->connection, 2) || call_user_func($this->authFunc, $this->connection, 20)) {
 					$buffer .= '<span class="handler">';
-					if($row['publication'] == 1) {
+					if ($row['publication'] == 1) {
 						$buffer .= '<a href="?act=hide&id='.$row['id'].'">Schovat</a> ';
 					} else {
 						$buffer .= '<a href="?act=show&id='.$row['id'].'">Zobrazit</a> ';
